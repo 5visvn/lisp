@@ -238,7 +238,7 @@
 ;;; The difference between defvar & defparameter is : defparameter always set initial value to variable. defvar only set initial value when variable has not value, and defvar allows no initial value.
 
 ;;; constant
-(defconstant name+ "constant value" "documentation-string")
+;; (defconstant name+ "constant value" "documentation-string")
 ;;; defconstant's variable is global, not allowed to be passed to a function
 
 ;;; setf
@@ -265,6 +265,28 @@
 ;;; common macros
 ;; do
 (defun foo71 ()
-  (do ((i 0 (+1 i)))
+  (do ((i 0 (+ 1 i)))
       ((>= i 10))
     (format t "~%~d" i)))
+;; dolist
+(defun foo72 ()
+  (dolist (x `(1 2 3))
+    (print x)
+    (if (evenp x) (return))))
+;; dotimes
+(defun foo73 ()
+  (dotimes (x 10)
+    (print x)))
+;; if : single body
+(defun foo74 ()
+  (if (> 2 3)
+      (print "yes")
+      (print "nop"))) ; -> "nop"
+;; if progn
+(defun foo75 ()
+  (if (< 2 3)
+      (progn
+        (print "2 < 3 ?")
+        (print "yes"))
+      (print "nop"))) ; -> "2 < 3 ?" "yes"
+;; when
