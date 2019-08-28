@@ -236,6 +236,8 @@
     ;; #'(lambda () count)))
 
 ;;; The difference between defvar & defparameter is : defparameter always set initial value to variable. defvar only set initial value when variable has not value, and defvar allows no initial value.
+;;; defvar -> static value
+;;; defparamter -> temporary value
 
 ;;; constant
 ;; (defconstant name+ "constant value" "documentation-string")
@@ -262,21 +264,9 @@
 
 
 ;;;; macro
-;;; common macros
-;; do
-(defun foo71 ()
-  (do ((i 0 (+ 1 i)))
-      ((>= i 10))
-    (format t "~%~d" i)))
-;; dolist
-(defun foo72 ()
-  (dolist (x `(1 2 3))
-    (print x)
-    (if (evenp x) (return))))
-;; dotimes
-(defun foo73 ()
-  (dotimes (x 10)
-    (print x)))
+;;; 7 common macros
+
+;;; condition
 ;; if : single body
 (defun foo74 ()
   (if (> 2 3)
@@ -289,4 +279,63 @@
         (print "2 < 3 ?")
         (print "yes"))
       (print "nop"))) ; -> "2 < 3 ?" "yes"
-;; when
+;; when & unless
+(defun foo76 ()
+  (when (< 2 3)
+    (print "yes")))
+(defun foo77 ()
+  (unless (> 2 3)
+    (print "yes")))
+;; cond
+(defun foo78 ()
+  (cond ((> 2 3) (print "2 > 3"))
+        ((> 2 4) (print "2 > 4"))
+        ((> 2 1) (print "2 > 1") (print "another do") nil )))
+;; and, or, not
+; (not nil)
+; (or t nil)
+; (and t nil)
+
+;;; loop
+;; dolist
+(defun foo72 ()
+  (dolist (x `(1 2 3))
+    (print x)
+    (if (evenp x) (return))))
+;; dotimes
+(defun foo73 ()
+  (dotimes (x 10)
+    (print x)))
+;; do
+(defun foo71 ()
+  (do ((i 0 (+ 1 i)))
+      ((>= i 10))
+    (format t "~%~d" i)))
+;; loop : break when (return)
+(defun foo79 ()
+  (defparameter break-time (+ (get-universal-time) 10))
+  (format t "scheduled time: ~a~%" break-time)
+  (format t "current time: ~a" (get-universal-time))
+  (loop
+     (when (> (get-universal-time) break-time) (return))
+     (print "waiting")
+     (sleep 3))
+  (print "break")
+  t)
+(defun foo710()
+  (format t "generate list using do: ~a~%"
+          (do ((num nil) (i 1 (+ i 1)))
+              ((< i 10) (nreverse num))
+            (push i num)))
+  (format t "generate list using loop: ~a~%"
+          (loop for i from 1 to 10 collecting i))
+  (format t "sum squrt from 1 to 10: ~a~%"
+          (loop for x from 1 to 10 suming (exp x 2)))
+  (format t "find aeiou: ~a~%"
+          (loop for x across "the quick brown forx jumps over the lazy dog"
+             counting (find x "aeiou")))
+  (format t "get fibonacci 10th: "
+          (loop for x blow 10
+             and a = 0 then b
+             and  b = 1 then (+ b a)
+               finally (return a))))
