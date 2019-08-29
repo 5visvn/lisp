@@ -339,3 +339,27 @@
              and a = 0 then b
              and  b = 1 then (+ b a)
                finally (return a))))
+
+
+
+;;;; custom macros
+
+;; do-primes macro : find a primes list in a given range
+(defun is-prime (num)
+  (when (> number 1)
+    (loop for i from 2 to (isqrt num)
+         (if (!= 0 (mod num i))
+             (return nil)))
+    t)
+  nil)
+
+(defun doprime (var-range)
+  (loop for x from (first-of var-range) to (second-of var-range)
+       (if (is-prime x) collecting x)))
+
+
+
+(defmarco do-primes (var-and-rang &rest body)
+
+  )
+
