@@ -312,8 +312,8 @@
       ((>= i 10))
     (format t "~%~d" i)))
 ;; loop : break when (return)
+(defparameter break-time (+ (get-universal-time) 10))
 (defun foo79 ()
-  (defparameter break-time (+ (get-universal-time) 10))
   (format t "scheduled time: ~a~%" break-time)
   (format t "current time: ~a" (get-universal-time))
   (loop
@@ -330,12 +330,12 @@
   (format t "generate list using loop: ~a~%"
           (loop for i from 1 to 10 collecting i))
   (format t "sum squrt from 1 to 10: ~a~%"
-          (loop for x from 1 to 10 suming (exp x 2)))
+          (loop for x from 1 to 10 summing (expt x 2)))
   (format t "find aeiou: ~a~%"
           (loop for x across "the quick brown forx jumps over the lazy dog"
              counting (find x "aeiou")))
-  (format t "get fibonacci 10th: "
-          (loop for x blow 10
+  (format t "get fibonacci 10th: ~a~%"
+          (loop for x below 10
              and a = 0 then b
              and  b = 1 then (+ b a)
                finally (return a))))
@@ -346,20 +346,19 @@
 
 ;; do-primes macro : find a primes list in a given range
 (defun is-prime (num)
-  (when (> number 1)
-    (loop for i from 2 to (isqrt num)
-         (if (!= 0 (mod num i))
-             (return nil)))
-    t)
-  nil)
+  (when (> num 1)
+    (loop for i from 2 to (isqrt num) never (zerop (mod num i)))))
 
-(defun doprime (var-range)
-  (loop for x from (first-of var-range) to (second-of var-range)
-       (if (is-prime x) collecting x)))
+(defun next-prime (start)
+  (loop for x from start
+     when (is-prime x) return x))
+
+(defun do-prime (var-range)
+  (do ((x (first var-range) (next-prime (1+ x))))
+      ((> x (second var-range)))
+    (print x)))
 
 
+;; (defmarco do-primes (var-and-rang &rest body)
 
-(defmarco do-primes (var-and-rang &rest body)
-
-  )
-
+;;   )
