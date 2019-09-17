@@ -369,10 +369,63 @@
 
 
 
-;;;;; charpter 11
-(defparameter *vec* (make-array 5
+;;;;; charpter 11  array, vector, list, map, string
+(vector 1 2 3 4 5) ; -> #(1 2 3 4 5)
+(defparameter *x* (make-array 5
                                 :adjustable t ; enable to change its size
                                 :fill-pointer 0; store its length
-                                :element-type 'character ; element type, default can be any type of each element
-                                :initial-element 'a; initial value
+                                :element-type 'int;'character 'bit ; element type, default can be any type of each element
+                                :initial-element 1; initial value
                                 ))
+(defvar *c* (make-array 5 :element-type 'character :initial-element #\a))
+
+;;;; manage elements
+
+; #( 1 1)
+;;; basic functions
+(length *x*) ; the length of x
+(setf (elt *x* 1) 10) ; the elements in position 1 of x
+; *x* -> #(1 10)
+
+;;; extra funtions
+(count 1 *x*)  ; -> 1
+(remove 10 *x*) ; -> #(1)
+(substitute 10 1 *x*) ; -> #(10 10)
+(find 10 *x*) ; 10
+(find 1 *x*) ; 1
+(find 2 *x*) ; nil
+(position 1 *x*) ; 0
+(search "bar" "foobar") ; 3
+(mismatch "foo" "foobar") ; 3
+;;keywords of these function
+; :test     compare operation, default EQL (operator=). to compare the value
+; :key      iterator function to solve every element. to get the value we want to compare
+; :start    default 0
+; :end      default nil
+; :from-end default nil. t will iterate array from the end to start
+; :count    how many count will be iterated. default 1.(only for reomve  and substitute)
+(find 11 *x* :key (lambda (x) (1+ x))) ; -> 10
+
+;;; advance functions
+;; -if,  -if-not
+;; count-if-not
+(count-if-not #'evenp *x*) ; -> 1
+(count-if #'(lambda (x) (< x 11)) *x*) ; -> 11
+(remove-if-not #'alpha-char-p #("foo" "bar" "2baa") :key #'(lambda (x) (elt x 0)))
+
+;;;; operate array
+
+(concatenate 'vector #(1 2 3) #(4 5 6)) ; vector, list, string -> #(1 2 3 4 5 6)
+(setf (subseq *c* 2 3) "xxx") ;-> *c* : "aaaaa" -> "aaxaa"
+
+(sort *x* #'>) ;-> x : #(10 1)
+(sort #("foo" "bar" "2baa") #'string<) ;-> #("2baa" "bar" "foo")
+(merge 'vector #(10 1 3) #(7 4 11 21) #'>) ;-> #(10 7 4 11 21 1 3)
+(merge 'vector (sort #(10 1 3) #'>) (sort #(7 4 11 21) #'<) #'>) ;-> #(10 4 7 11 21 3 1)
+(merge 'vector (sort #(10 1 3) #'<) (sort #(7 4 11 21) #'<) #'>) ;-> #(4 7 11 21 1 3 10)
+(merge 'vector (sort #(10 1 3) #'>) (sort #(7 4 11 21) #'>) #'>) ;-> #(21 11 10 7 4 3 1)
+;; merge operation should the two sub vector sorted and have the same order with merge order
+(map 'vector #'* #(1 2 4) #(3 5 6)) ;-> #(3 10 24)
+;; (map-into a #'+ a b c) ;-> a = a + b + c (vector)
+(reduce #'* #(1 2 3)) ;-> 6
+(reduce #'max #(1 2 3 4)) ;-> 4
