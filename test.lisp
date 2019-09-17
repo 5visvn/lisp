@@ -359,6 +359,20 @@
     (print x)))
 
 
-;; (defmarco do-primes (var-and-rang &rest body)
+;; (defmarco do-primes ((var start end) &rest body)
 
 ;;   )
+
+
+
+
+
+
+
+;;;;; charpter 11
+(defparameter *vec* (make-array 5
+                                :adjustable t ; enable to change its size
+                                :fill-pointer 0; store its length
+                                :element-type 'character ; element type, default can be any type of each element
+                                :initial-element 'a; initial value
+                                ))
