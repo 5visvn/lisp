@@ -429,3 +429,11 @@
 ;; (map-into a #'+ a b c) ;-> a = a + b + c (vector)
 (reduce #'* #(1 2 3)) ;-> 6
 (reduce #'max #(1 2 3 4)) ;-> 4
+
+
+
+
+
+
+
+;;;;; charpter 12 list
