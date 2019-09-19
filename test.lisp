@@ -373,7 +373,7 @@
 (vector 1 2 3 4 5) ; -> #(1 2 3 4 5)
 (defparameter *x* (make-array 5
                                 :adjustable t ; enable to change its size
-                                :fill-pointer 0; store its length
+                                :fill-pointer 2; store its length
                                 :element-type 'int;'character 'bit ; element type, default can be any type of each element
                                 :initial-element 1; initial value
                                 ))
@@ -449,7 +449,7 @@
 
 (defparameter *t* (cons #'+ (list 1 2))) ;-> (#<FUNCTION +> 1 2) it seems/shows funtion is not an object
 
-(defparameter *m* (list 11 12 13 15 16 17 10))
+(defparameter *m* (list 11 12 13 14 15 16 17 10))
 (mapcar #'+ *l* *m*) ;-> (12 14 16 20 22 24 10)     new list
 (maplist #'(lambda (x y) (+ (car x) (car y))) *l* *m*) ;-> (12 14 16 20 22 24 10)   new list
 
@@ -464,8 +464,10 @@
 (assoc 0 *alist*) ;->  (0 . 10)   search
 (acons 8 18 *alist*) ;-> insert cons in front of a alist without change its content
 (push (cons 8 18) *alist*) ;-> insert cons in front of a alist with change.
-(destructuring-bind (a b c d e f g) *l* (vector a b c d e f g)) ;-> #(1 2 3 5 6 7 0)  seprate *l* and get its all elements
+(destructuring-bind (a b c d e f g h) *l* (vector a b c d e f g h)) ;-> #(1 2 3 5 6 7 0)  seprate *l* and get its all elements
 
 
 
 ;;;;; charpter 14 file io
+(defparameter *fi* (open filename :if-does-not-exist nil))
+(defparameter *fo* (open filename :direction :output))
