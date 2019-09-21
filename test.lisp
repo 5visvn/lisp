@@ -312,8 +312,8 @@
       ((>= i 10))
     (format t "~%~d" i)))
 ;; loop : break when (return)
-(defparameter break-time (+ (get-universal-time) 10))
 (defun foo79 ()
+  (let ((break-time (+ (get-universal-time) 10))))
   (format t "scheduled time: ~a~%" break-time)
   (format t "current time: ~a" (get-universal-time))
   (loop
@@ -359,10 +359,12 @@
     (print x)))
 
 
-;; (defmarco do-primes ((var start end) &rest body)
+(defmarco do-primes (var-and-range &rest body)
+  (let ((start (first var-and-range))
+        (end (second var-and-range))
+        ))
 
-;;   )
-
+  )
 
 
 
