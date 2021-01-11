@@ -83,3 +83,50 @@
 
 (w-pos+ '(1 2 4))
 (w-+recursive 0 '(1 2 4))
+
+
+;; binary search tree
+(defstruct (node (:print-function
+                  (lambda (n s d)
+                    (format s "#<~A>" (node-elt n)))))
+  elt
+  (l nil)
+  (r nil))
+
+(defun bst-insert (obj bst <)
+  (if (null bst)
+      (setf bst (make-node :elt obj))
+    (if (eql obj (node-elt bst))
+        nil
+      (if (funcall < obj (node-elt bst))
+          (if (null (node-l bst))
+              (setf (node-l bst) (make-node :elt obj))
+            (bst-insert obj (node-l bst) <))
+        (if (null (node-r bst))
+            (setf (node-r bst) (make-node :elt obj))
+          (bst-insert obj (node-r bst) <))))))
+
+(defun bst-find (obj bst <)
+  (if (null bst)
+      nil
+    (if (eql obj (node-elt bst))
+        bst
+      (if (funcall < obj (node-elt bst))
+          (bst-find obj (node-l bst) <)
+        (bst-find obj (node-r bst))))))
+
+(defun bst-traverse (fn bst)
+  (when bst
+    (bst-traverse fn (node-l bst))
+    (funcall fn (node-elt bst))
+    (bst-traverse fn (node-r bst))))
+;; TODO seems not work
+(setq nums nil)
+
+(dolist (ele '(1 3 8 5 6 2 4 9 6 4 0))
+  (bst-insert ele nums #'<))
+
+(bst-insert 1 nums #'<)
+(bst-traverse #'princ nums)
+
+(bst-find 1 nums #'<)
