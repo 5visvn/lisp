@@ -94,8 +94,6 @@
   (r nil))
 
 (defun bst-insert (obj bst <)
-  (if (null bst)
-      (setf bst (make-node :elt obj)) ;; setf not worked with bst is nil. bst is nil outside
     (if (eql obj (node-elt bst))
         nil
       (if (funcall < obj (node-elt bst))
@@ -104,7 +102,14 @@
             (bst-insert obj (node-l bst) <))
         (if (null (node-r bst))
             (setf (node-r bst) (make-node :elt obj))
-          (bst-insert obj (node-r bst) <))))))
+            (bst-insert obj (node-r bst) <)))))
+
+(defun bst-push (obj bst <)
+  (if (null bst)
+      (make-node :elt obj)
+      (progn
+        (bst-insert obj bst <)
+        bst)))
 
 (defun bst-find (obj bst <)
   (if (null bst)
@@ -119,15 +124,14 @@
   (when bst
     (bst-traverse fn (node-l bst))
     (funcall fn (node-elt bst))
-    (bst-traverse fn (node-r bst))))
+    (bst-traverse fn (node-r bst))
+    ))
 
 
 (setf nums nil)
 
-(setf nums (bst-insert 1 nums #'<)) ;; TODO why nums can't be initialized with nil?
-(bst-insert 2 nums #'<)
 (dolist (ele '(1 3 8 5 6 2 4 9 6 4 0))
-  (bst-insert ele nums #'<))
+  (setf nums (bst-push ele nums #'<)))
 
 
 (bst-traverse #'princ nums)
