@@ -85,7 +85,7 @@
 (w-+recursive 0 '(1 2 4))
 
 
-;; binary search tree
+;; Binary search tree
 (defstruct (node (:print-function
                   (lambda (n s d)
                     (format s "#<~A>" (node-elt n)))))
@@ -137,3 +137,150 @@
 (bst-traverse #'princ nums)
 
 (bst-find 4 nums #'<)
+
+
+(block head
+  (format "Number")
+  (+ 1 3)
+  (if t
+      (return-from head 'return-value))
+  (format "Should not appear"))
+
+;; use cond to defun bst-insert, bst-find
+(defun bst-insert-cond (obj bst <)
+  )
+
+(defun bst-find-cond (obj bst <)
+  (cond ((null bst)
+         nil)
+        ((eql obj (node-elt bst))
+         bst)
+        ((funcall < obj (node-elt bst))
+         (bst-find-cond obj (node-l bst) <))
+        (t
+         (bst-find-cond obj (node-r bst) <))
+        ))
+
+(bst-find-cond 4 nums #'<)
+
+
+
+(setf mon '(31 28 31 30 31 30 31 31 30 31 30 31))
+
+(setf sums (maplist #'(lambda (x)
+                        (apply #'+ x))
+                    (reverse mon)))
+
+
+
+(let ((x (car '(8 9 2))))
+  (cons x x))
+((lambda (x)
+   (cons x x))
+ (car '(8 9 2)))
+(let* ((w (car '(3 4 1)))
+       (y (+ w 7)))
+  (cons w y))
+
+((lambda (x)
+  (unless (and (integerp x)
+               (<= x 5))
+    (* x x)))
+ 6)
+
+(setf month [31 28 31 30 31 30 31 31 30 31 30 31])
+
+(defun leap-year? (x)
+  (and (zerop (mod x 4))
+       (or (not (zerop (mod x 100)))
+           (zerop (mod x 400)))))
+
+(defun mon-days (m y)
+  (if (and (integerp m)
+           (integerp y))
+      (progn
+        (+ (svref month (- m 1))
+           (if (and (leap-year? y) (eql m 2))
+               1
+             0)))
+    (format "Error format")))
+
+(let ((d 1))
+  (incf d 2)
+  d)
+
+
+;; use function to generate a series functions
+(defun combiner (x)
+  (typecase x
+    (number #'+)
+    (list #'append)
+    (t #'list)))
+(defun combin (&rest args)
+  (apply (combiner (car args))
+         args))
+(defun make-adder (n)
+  #'(lambda (x)
+    (+ x n)))
+
+(setf add5 (make-adder 5))
+(funcall add5 7)
+
+(defun compose (&rest fns)
+  (destructing-bind (fn1 . rest) (reverse fns)
+                    #'(lambda (&rest args)
+                        (reduce #'(lambda (v f) (funcall f v))
+                                rest
+                                :initial-value (apply fn1 args)))))
+
+(defun disjoin (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((disj (apply #'disjoin fns)))
+        #'(lambda (&rest args)
+            (or (apply fn args) (apply disj args))))))
+
+(defun conjoin (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((conj (apply #'conjoin fns)))
+        #'(lambda (&rest args)
+            (and (apply fn args) (apply conj args))))))
+
+(defun curry (fn &rest args)
+  #'(lambda (&rest args2)
+      (apply fn (append args args2))))
+
+(defun rcurry (fn &rest args)
+  #'(lambda (&rest args2)
+      (apply fn (append args2 args))))
+
+(defun always (x) #'(lambda (&rest args) x))
+
+;; dynamic scope
+(let ((x 10))
+  (defun foo ()
+    (declare (special x))
+    x))
+(let ((x 20))
+  (declare (special x))
+  (foo))
+(foo)
+
+(compiled-function-p #'curry)
+
+
+;; fib algorithm
+;; fib (0) = fib(1) = 1
+;; fib (n) = fib(n-1) + fib(n-2) ;; n>1
+;; use recursive without call fib twice in a funcall
+(defun fib (n)
+  (if (< n 2)
+      (values 1 1)
+      (multiple-value-bind (x y) (fib (- n 1))
+        (values (+ x y) x))))
+
+(list (fib 10))
+
+(multiple-value-bind (x y) (values 1 2)
+  (list x y))
