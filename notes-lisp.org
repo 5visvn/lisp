@@ -1,0 +1,36 @@
+* Concepts
+** Recursion
+   Recursion is an implementation of mathematical induction
+   Recursive could be mapped to "for" loop
+     #+begin_src  C++ :includes <iostream> :var sum=0 :var n=10
+       //    first     last   next
+       //      ↑        ↑      ↑
+       for(int i = 1; i < n; ++i)
+          sum += i; // statement
+       std::cout << sum;
+     #+end_src
+
+     #+RESULTS:
+     : 45
+
+     #+begin_src elisp
+       (defun sum (n)   ; first
+         (if (equal 0 n)  ; last
+             0
+           (+ n (sum (- n 1)))))
+       ;    ↑        ↑
+       ; statement  next
+       (sum 10)
+     #+end_src
+
+     #+RESULTS:
+     : 55
+   So if you want to write a recursion funtion, just follow the steps:
+     1. initial value (input parameter)
+     2. end condition and value
+     3. self call
+     4. add your statement before call
+   Check rules:
+     1. Does it works for 0
+     2. If it works for n, does it works for n + 1?
+** End
